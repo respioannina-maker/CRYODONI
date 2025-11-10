@@ -8,50 +8,44 @@
   <style>
     :root{ --ice:#e8edf2; --card:rgba(255,255,255,0.85); --ink:#0b0f14; --muted:#6b7280; }
     *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
-      background:url('https://images.unsplash.com/photo-1573496359142-bd233e0e1b4e?auto=format&fit=crop&w=1200&q=80')
-        no-repeat center center fixed;
-      background-size:cover;
-      backdrop-filter:blur(6px);
-    }
-    .wrap{max-width:1000px; margin:42px auto; padding:22px;
-      background:var(--card); border:1px solid rgba(229,231,235,0.8); border-radius:24px;
-      box-shadow:0 12px 28px rgba(0,0,0,.25);}
+    body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial; background:#dce2e7;}
+    .grid{display:grid; grid-template-columns:1fr 320px; gap:18px; max-width:1250px; margin:40px auto; padding:0 20px}
+    .wrap{background:var(--card); padding:22px; border:1px solid rgba(229,231,235,0.8); border-radius:24px; box-shadow:0 12px 28px rgba(0,0,0,.25);}
     .brand{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
     .brand h1{margin:0; font-size:26px; color:#0b0f14; letter-spacing:.5px}
     .badge{display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; font-size:12px; font-weight:800; color:#1f2937}
-    .motto{margin:0 0 18px; color:#111827; font-weight:600; text-shadow:0 1px 2px rgba(255,255,255,.5)}
+    .motto{margin:0 0 18px; color:#111827; font-weight:600;}
     form{display:grid; grid-template-columns: repeat(12, 1fr); gap:12px}
-    .field{grid-column:span 6; display:flex; flex-direction:column; gap:6px;
-      background:rgba(255,255,255,0.9); border:1px solid #e6e8ec; border-radius:14px; padding:10px 12px}
-    .field:focus-within{outline:3px solid rgba(79,70,229,.2)}
+    .field{grid-column:span 6; display:flex; flex-direction:column; gap:6px; background:rgba(255,255,255,0.9); border:1px solid #e6e8ec; border-radius:14px; padding:10px 12px}
     label{font-size:12px; font-weight:700; color:#4b5563}
     input,select,textarea{border:none; outline:none; font-size:14px; background:transparent}
     .actions{margin-top:16px; display:flex; gap:12px; align-items:center}
-    button{border:none; padding:12px 18px; border-radius:14px; font-weight:800; cursor:pointer; color:#fff;
-      background:linear-gradient(180deg,#0b1220,#0f172a); box-shadow:0 10px 20px rgba(0,0,0,.15)}
+    button{border:none; padding:12px 18px; border-radius:14px; font-weight:800; cursor:pointer; color:#fff; background:linear-gradient(180deg,#0b1220,#0f172a); box-shadow:0 10px 20px rgba(0,0,0,.15)}
     button:disabled{opacity:.6; cursor:not-allowed}
     .ghost{background:transparent; color:#111827; border:1px solid #d1d5db}
-    .toast{position:fixed; top:16px; right:16px; background:#0b1620; color:#d1fae5; padding:10px 14px; border-radius:12px;
-      box-shadow:0 12px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-6px); transition:.25s}
+    .toast{position:fixed; top:16px; right:16px; background:#0b1620; color:#d1fae5; padding:10px 14px; border-radius:12px; box-shadow:0 12px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-6px); transition:.25s}
     .toast.show{opacity:1; transform:translateY(0)}
+    .side img{width:100%; border-radius:16px; box-shadow:0 10px 24px rgba(0,0,0,.15)}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="brand">
-      <h1>CRYODONI <span class="badge">Radial EBUS</span></h1>
+  <div class="grid">
+    <div class="wrap">
+      <div class="brand">
+        <h1>CRYODONI <span class="badge">Radial EBUS</span></h1>
+      </div>
+      <p class="motto">Μελέτη με πλαϊνή εικόνα — όλα τα δεδομένα σε μία γραμμή.</p>
+      <form id="case-form"></form>
+      <div class="actions">
+        <button id="saveBtn">Αποθήκευση</button>
+        <button id="resetBtn" class="ghost" type="button">Επαναφορά</button>
+      </div>
     </div>
-    <p class="motto">Μελέτη με φόντο παγωμένης βελανιδιάς — όλα τα δεδομένα σε μία γραμμή.</p>
-
-    <form id="case-form"></form>
-    <div class="actions">
-      <button id="saveBtn">Αποθήκευση</button>
-      <button id="resetBtn" class="ghost" type="button">Επαναφορά</button>
+    <div class="side">
+      <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=800&auto=format&fit=crop" alt="Παγωμένη βελανιδιά">
     </div>
   </div>
-
   <div id="toast" class="toast">Αποθηκεύτηκε</div>
   <script src="app.js"></script>
 </body>
