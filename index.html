@@ -6,23 +6,28 @@
   <title>CRYODONI — Καταχώριση</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{ --ice:#e8edf2; --card:#f7f9fb; --ink:#0b0f14; --muted:#6b7280; }
+    :root{ --ice:#e8edf2; --card:rgba(255,255,255,0.85); --ink:#0b0f14; --muted:#6b7280; }
     *{box-sizing:border-box}
-    body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
-      background:linear-gradient(160deg,var(--ice),#dde4ea 55%,#d7dee5);}
+    body{
+      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+      background:url('https://images.unsplash.com/photo-1573496359142-bd233e0e1b4e?auto=format&fit=crop&w=1200&q=80')
+        no-repeat center center fixed;
+      background-size:cover;
+      backdrop-filter:blur(6px);
+    }
     .wrap{max-width:1000px; margin:42px auto; padding:22px;
-      background:linear-gradient(180deg,#fbfdff,var(--card)); border:1px solid #e5e7eb; border-radius:24px;
-      box-shadow:0 12px 28px rgba(0,0,0,.08);}
+      background:var(--card); border:1px solid rgba(229,231,235,0.8); border-radius:24px;
+      box-shadow:0 12px 28px rgba(0,0,0,.25);}
     .brand{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
     .brand h1{margin:0; font-size:26px; color:#0b0f14; letter-spacing:.5px}
     .badge{display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; font-size:12px; font-weight:800; color:#1f2937}
-    .motto{margin:0 0 18px; color:#374151; font-weight:600}
+    .motto{margin:0 0 18px; color:#111827; font-weight:600; text-shadow:0 1px 2px rgba(255,255,255,.5)}
     form{display:grid; grid-template-columns: repeat(12, 1fr); gap:12px}
-    .field{grid-column:span 6; display:flex; flex-direction:column; gap:6px; background:#fff; border:1px solid #e6e8ec; border-radius:14px; padding:10px 12px}
+    .field{grid-column:span 6; display:flex; flex-direction:column; gap:6px;
+      background:rgba(255,255,255,0.9); border:1px solid #e6e8ec; border-radius:14px; padding:10px 12px}
     .field:focus-within{outline:3px solid rgba(79,70,229,.2)}
     label{font-size:12px; font-weight:700; color:#4b5563}
     input,select,textarea{border:none; outline:none; font-size:14px; background:transparent}
-    textarea{min-height:80px; resize:vertical}
     .actions{margin-top:16px; display:flex; gap:12px; align-items:center}
     button{border:none; padding:12px 18px; border-radius:14px; font-weight:800; cursor:pointer; color:#fff;
       background:linear-gradient(180deg,#0b1220,#0f172a); box-shadow:0 10px 20px rgba(0,0,0,.15)}
@@ -31,32 +36,19 @@
     .toast{position:fixed; top:16px; right:16px; background:#0b1620; color:#d1fae5; padding:10px 14px; border-radius:12px;
       box-shadow:0 12px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-6px); transition:.25s}
     .toast.show{opacity:1; transform:translateY(0)}
-    .hint{color:var(--muted); font-size:12px}
-    .table{margin-top:24px; background:#fff; border:1px solid #e5e7eb; border-radius:14px; overflow:hidden}
-    .table-row,.table-head{display:grid; grid-template-columns: 120px 140px 1fr; gap:8px; padding:10px 14px}
-    .table-head{background:#f3f4f6; font-weight:800}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="brand">
       <h1>CRYODONI <span class="badge">Radial EBUS</span></h1>
-      <small class="hint">Ice-grey. Professional. A touch of mystery.</small>
     </div>
-    <p class="motto">Μετά την αποθήκευση εμφανίζεται <strong>«Αποθηκεύτηκε»</strong> και γίνεται αυτόματο refresh.</p>
+    <p class="motto">Μελέτη με φόντο παγωμένης βελανιδιάς — όλα τα δεδομένα σε μία γραμμή.</p>
 
     <form id="case-form"></form>
     <div class="actions">
       <button id="saveBtn">Αποθήκευση</button>
       <button id="resetBtn" class="ghost" type="button">Επαναφορά</button>
-      <span class="hint">Μελέτη: <strong>CRYODONI</strong></span>
-    </div>
-
-    <div id="recent" class="table" hidden>
-      <div class="table-head">
-        <div>ΝΠΣ</div><div>Ημερ. επέμβασης</div><div>Σύνοψη</div>
-      </div>
-      <div id="recentRows"></div>
     </div>
   </div>
 
