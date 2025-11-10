@@ -1,7 +1,7 @@
 /* ================= CRYODONI Frontend (χωρίς token) ================= */
 const CONFIG = {
   // Βάλε εδώ το Web App URL από το Apps Script deployment
-  API_URL: 'https://script.google.com/macros/s/AKfycbw4VfL3qGHzs-7n-3-yUM0uCzEimWJdS0O9fmiQNKyWdROh-hZ4KUGIMmuxIC1AUc6ogA/exec'
+  API_URL: 'https://script.google.com/macros/s/AKfycbyIjVwe_HMIkWUZFGw2HBc8oV6_b4nhtqJ5qvv4hoEb29Y3IapkEwNdocjShJ-8VdFw9g/exec'
 };
 
 /** Παράμετροι (ΕΛΛΗΝΙΚΑ, όλα σε μία γραμμή) — CLINICAL ONLY **/
