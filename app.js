@@ -1,6 +1,6 @@
 /* ============== CRYODONI Frontend (χωρίς token, 2 φόρμες) ============== */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycby1BydlteCIrcOgertcoeOS1MvzBaXyEiB4W3OiKp9BU2muEYlfV-YgB1YewTafquTJOw/exec' // /exec
+  API_URL: 'https://script.google.com/macros/s/AKfycbxINHP6adf2MqkRAa9BvLWpMV3LokI1wxMdthComOAUWGb5hcYtVUqq_wKC9bFk3AHVjg/exec' // π.χ. https://script.google.com/macros/s/.../exec
 };
 
 // BASE (Επέμβαση)
@@ -44,7 +44,7 @@ const FIELDS_RESULTS = [
     options:['—','Κακοήθεια','Καλοήθεια_μη_ειδική','Ειδική_καλοήθης','Φλεγμονώδες','Μη_διαγνωστικό']}
 ];
 
-// DOM
+// DOM refs
 const toast = document.getElementById('toast');
 const tabBase = document.getElementById('tab-base');
 const tabResults = document.getElementById('tab-results');
@@ -93,7 +93,7 @@ function showToast(msg='Αποθηκεύτηκε'){
   setTimeout(()=> toast.classList.remove('show'), 1800);
 }
 
-// ⬇️ ΣΗΜΑΝΤΙΚΟ: Διαβάζουμε ΜΟΝΟ από τη δοθείσα φόρμα (ΟΧΙ document.getElementById)
+// Διαβάζουμε ΜΟΝΟ από τη δοθείσα φόρμα (scoped)
 async function saveSection(container, fields){
   const payload = {};
   fields.forEach(p=>{
@@ -115,7 +115,8 @@ async function saveSection(container, fields){
       headers:{'Content-Type':'text/plain;charset=utf-8'}, // αποφεύγει preflight
       body: JSON.stringify(payload)
     });
-    const data = await res.json();
+    const text = await res.text();
+    let data; try{ data=JSON.parse(text); }catch{ throw new Error('Μη έγκυρο JSON από backend'); }
     if(!data.ok) throw new Error(data.error || 'Σφάλμα');
     showToast('Αποθηκεύτηκε');
     setTimeout(()=> location.reload(), 800);
