@@ -1,51 +1,62 @@
 <!doctype html>
 <html lang="el">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CRYODONI — Καταχώριση</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{ --ice:#e8edf2; --card:rgba(255,255,255,0.85); --ink:#0b0f14; --muted:#6b7280; }
-    *{box-sizing:border-box}
-    body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial; background:#dce2e7;}
-    .grid{display:grid; grid-template-columns:1fr 320px; gap:18px; max-width:1250px; margin:40px auto; padding:0 20px}
-    .wrap{background:var(--card); padding:22px; border:1px solid rgba(229,231,235,0.8); border-radius:24px; box-shadow:0 12px 28px rgba(0,0,0,.25);}
-    .brand{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
-    .brand h1{margin:0; font-size:26px; color:#0b0f14; letter-spacing:.5px}
-    .badge{display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; font-size:12px; font-weight:800; color:#1f2937}
-    .motto{margin:0 0 18px; color:#111827; font-weight:600;}
-    form{display:grid; grid-template-columns: repeat(12, 1fr); gap:12px}
-    .field{grid-column:span 6; display:flex; flex-direction:column; gap:6px; background:rgba(255,255,255,0.9); border:1px solid #e6e8ec; border-radius:14px; padding:10px 12px}
-    label{font-size:12px; font-weight:700; color:#4b5563}
-    input,select,textarea{border:none; outline:none; font-size:14px; background:transparent}
-    .actions{margin-top:16px; display:flex; gap:12px; align-items:center}
-    button{border:none; padding:12px 18px; border-radius:14px; font-weight:800; cursor:pointer; color:#fff; background:linear-gradient(180deg,#0b1220,#0f172a); box-shadow:0 10px 20px rgba(0,0,0,.15)}
-    button:disabled{opacity:.6; cursor:not-allowed}
-    .ghost{background:transparent; color:#111827; border:1px solid #d1d5db}
-    .toast{position:fixed; top:16px; right:16px; background:#0b1620; color:#d1fae5; padding:10px 14px; border-radius:12px; box-shadow:0 12px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-6px); transition:.25s}
-    .toast.show{opacity:1; transform:translateY(0)}
-    .side img{width:100%; border-radius:16px; box-shadow:0 10px 24px rgba(0,0,0,.15)}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CRYODONI — Καταχώριση</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --card:#ffffff; --muted:#6b7280; }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial; background:#e7edf2;}
+  .grid{display:grid; grid-template-columns:1fr 320px; gap:18px; max-width:1250px; margin:40px auto; padding:0 20px}
+  .wrap{background:var(--card); padding:22px; border:1px solid #e5e7eb; border-radius:24px; box-shadow:0 12px 28px rgba(0,0,0,.08)}
+  .brand{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
+  .brand h1{margin:0; font-size:24px}
+  .tabs{display:flex; gap:8px; margin:10px 0 18px}
+  .tab{border:1px solid #d1d5db; background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:700}
+  .tab.active{background:#0f172a; color:#fff; border-color:#0f172a}
+  form{display:grid; grid-template-columns: repeat(12,1fr); gap:12px}
+  .field{grid-column:span 6; display:flex; flex-direction:column; gap:6px; background:#fff; border:1px solid #e6e8ec; border-radius:12px; padding:10px 12px}
+  label{font-size:12px; font-weight:700; color:#4b5563}
+  input,select{border:none; outline:none; font-size:14px; background:transparent}
+  .actions{margin-top:14px; display:flex; gap:10px}
+  button{border:none; padding:10px 16px; border-radius:10px; font-weight:800; cursor:pointer; color:#fff; background:#0f172a}
+  .ghost{background:transparent; color:#111827; border:1px solid #d1d5db}
+  .toast{position:fixed; top:16px; right:16px; background:#0b1620; color:#d1fae5; padding:10px 14px; border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.25); opacity:0; transform:translateY(-6px); transition:.25s}
+  .toast.show{opacity:1; transform:translateY(0)}
+  .side img{width:100%; border-radius:16px; box-shadow:0 10px 24px rgba(0,0,0,.12)}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
   <div class="grid">
     <div class="wrap">
-      <div class="brand">
-        <h1>CRYODONI <span class="badge">Radial EBUS</span></h1>
+      <div class="brand"><h1>CRYODONI</h1><small class="muted">Radial EBUS</small></div>
+
+      <div class="tabs">
+        <button id="tab-base" class="tab active">Επέμβαση</button>
+        <button id="tab-results" class="tab">Αποτελέσματα</button>
       </div>
-      <p class="motto">Μελέτη με πλαϊνή εικόνα — όλα τα δεδομένα σε μία γραμμή.</p>
-      <form id="case-form"></form>
-      <div class="actions">
-        <button id="saveBtn">Αποθήκευση</button>
-        <button id="resetBtn" class="ghost" type="button">Επαναφορά</button>
+
+      <form id="form-base"></form>
+      <div class="actions" id="actions-base">
+        <button id="saveBase">Αποθήκευση</button>
+        <button class="ghost" type="button" id="resetBase">Επαναφορά</button>
+      </div>
+
+      <form id="form-results" style="display:none"></form>
+      <div class="actions" id="actions-results" style="display:none">
+        <button id="saveResults">Αποθήκευση</button>
+        <button class="ghost" type="button" id="resetResults">Επαναφορά</button>
       </div>
     </div>
+
     <div class="side">
       <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=800&auto=format&fit=crop" alt="Παγωμένη βελανιδιά">
     </div>
   </div>
+
   <div id="toast" class="toast">Αποθηκεύτηκε</div>
   <script src="app.js"></script>
 </body>
