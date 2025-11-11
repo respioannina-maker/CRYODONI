@@ -1,6 +1,9 @@
-const CONFIG = { API_URL: 'https://script.google.com/macros/s/AKfycby1BydlteCIrcOgertcoeOS1MvzBaXyEiB4W3OiKp9BU2muEYlfV-YgB1YewTafquTJOw/exec' };
+/* ============== CRYODONI Frontend (χωρίς token, 2 φόρμες) ============== */
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycby1BydlteCIrcOgertcoeOS1MvzBaXyEiB4W3OiKp9BU2muEYlfV-YgB1YewTafquTJOw/exec' // /exec
+};
 
-// BASE
+// BASE (Επέμβαση)
 const FIELDS_BASE = [
   {key:'ΝΠΣ',label:'ΝΠΣ',type:'text',required:true},
   {key:'ΟΝΟΜΑ',label:'ΟΝΟΜΑ',type:'text'},
@@ -22,7 +25,7 @@ const FIELDS_BASE = [
   {key:'Επιπλοκή',label:'Επιπλοκή',type:'select',options:['Καμία','Αιμορραγία','Πνευμοθώρακας','Άλλη']}
 ];
 
-// RESULTS
+// RESULTS (Αποτελέσματα)
 const FIELDS_RESULTS = [
   {key:'ΝΠΣ',label:'ΝΠΣ',type:'text',required:true},
   {key:'Τελικό_αποτέλεσμα',label:'Τελικό αποτέλεσμα',type:'select',
@@ -41,16 +44,20 @@ const FIELDS_RESULTS = [
     options:['—','Κακοήθεια','Καλοήθεια_μη_ειδική','Ειδική_καλοήθης','Φλεγμονώδες','Μη_διαγνωστικό']}
 ];
 
+// DOM
 const toast = document.getElementById('toast');
-const formBase = document.getElementById('form-base');
-const formResults = document.getElementById('form-results');
 const tabBase = document.getElementById('tab-base');
 const tabResults = document.getElementById('tab-results');
+const formBase = document.getElementById('form-base');
+const formResults = document.getElementById('form-results');
+const actionsBase = document.getElementById('actions-base');
+const actionsResults = document.getElementById('actions-results');
 const saveBaseBtn = document.getElementById('saveBase');
 const saveResultsBtn = document.getElementById('saveResults');
 const resetBaseBtn = document.getElementById('resetBase');
 const resetResultsBtn = document.getElementById('resetResults');
 
+// Helpers
 function el(tag, attrs={}, children=[]){
   const e=document.createElement(tag);
   Object.entries(attrs).forEach(([k,v])=>{
@@ -61,6 +68,7 @@ function el(tag, attrs={}, children=[]){
   children.forEach(c=>e.appendChild(c));
   return e;
 }
+
 function renderForm(container, fields){
   container.innerHTML='';
   fields.forEach(p=>{
@@ -68,63 +76,73 @@ function renderForm(container, fields){
     wrap.appendChild(el('label',{for:p.key, text:p.label}));
     let input;
     if(p.type==='select'){
-      input=el('select',{id:p.key, name:p.key});
+      input=el('select',{name:p.key, autocomplete:'off'});
       (p.options||[]).forEach(opt=> input.appendChild(el('option',{value:String(opt), text:String(opt)})));
     } else {
-      input=el('input',{id:p.key, name:p.key, type:p.type||'text'});
+      input=el('input',{name:p.key, type:p.type||'text', autocomplete:'off'});
     }
-    if(p.required) input.required=true;
+    if(p.required) input.required = true;
     wrap.appendChild(input);
     container.appendChild(wrap);
   });
 }
-function showToast(msg='Αποθηκεύτηκε'){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800); }
 
-async function saveFields(fields){
-  const payload={};
-  fields.forEach(p=>{
-    const n=document.getElementById(p.key);
-    if(!n) return;
-    let v=n.value;
-    if(p.type==='number' && v!=='') v=Number(v);
-    payload[p.key]=v;
-  });
-  if(!payload['ΝΠΣ'] || String(payload['ΝΠΣ']).trim()===''){ showToast('Συμπλήρωσε ΝΠΣ'); return; }
-
-  const res = await fetch(CONFIG.API_URL,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'}, // no preflight
-    body: JSON.stringify(payload)
-  });
-  const data = await res.json();
-  if(!data.ok) throw new Error(data.error||'Σφάλμα');
+function showToast(msg='Αποθηκεύτηκε'){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=> toast.classList.remove('show'), 1800);
 }
 
+// ⬇️ ΣΗΜΑΝΤΙΚΟ: Διαβάζουμε ΜΟΝΟ από τη δοθείσα φόρμα (ΟΧΙ document.getElementById)
+async function saveSection(container, fields){
+  const payload = {};
+  fields.forEach(p=>{
+    const n = container.querySelector(`[name="${p.key}"]`);
+    if(!n) return;
+    let v = n.value;
+    if(p.type==='number' && v!=='') v = Number(v);
+    payload[p.key] = v;
+  });
+
+  if(!payload['ΝΠΣ'] || String(payload['ΝΠΣ']).trim()===''){
+    showToast('Συμπλήρωσε ΝΠΣ');
+    return;
+  }
+
+  try{
+    const res = await fetch(CONFIG.API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'}, // αποφεύγει preflight
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(!data.ok) throw new Error(data.error || 'Σφάλμα');
+    showToast('Αποθηκεύτηκε');
+    setTimeout(()=> location.reload(), 800);
+  }catch(err){
+    console.error(err);
+    showToast('Αποτυχία: ' + err.message);
+  }
+}
+
+// Tabs
+function showBase(){
+  tabBase.classList.add('active'); tabResults.classList.remove('active');
+  formBase.style.display='grid'; actionsBase.style.display='flex';
+  formResults.style.display='none'; actionsResults.style.display='none';
+}
+function showResults(){
+  tabResults.classList.add('active'); tabBase.classList.remove('active');
+  formResults.style.display='grid'; actionsResults.style.display='flex';
+  formBase.style.display='none'; actionsBase.style.display='none';
+}
+
+// Init
 renderForm(formBase, FIELDS_BASE);
 renderForm(formResults, FIELDS_RESULTS);
-
-tabBase.addEventListener('click', ()=>{
-  tabBase.classList.add('active'); tabResults.classList.remove('active');
-  formBase.style.display='grid'; formResults.style.display='none';
-  document.getElementById('actions-base').style.display='flex';
-  document.getElementById('actions-results').style.display='none';
-});
-tabResults.addEventListener('click', ()=>{
-  tabResults.classList.add('active'); tabBase.classList.remove('active');
-  formResults.style.display='grid'; formBase.style.display='none';
-  document.getElementById('actions-results').style.display='flex';
-  document.getElementById('actions-base').style.display='none';
-});
-
-saveBaseBtn.addEventListener('click', async (e)=>{
-  e.preventDefault();
-  try{ await saveFields(FIELDS_BASE); showToast('Αποθηκεύτηκε'); setTimeout(()=>location.reload(),800); }
-  catch(err){ showToast('Αποτυχία: '+err.message); }
-});
-saveResultsBtn.addEventListener('click', async (e)=>{
-  e.preventDefault();
-  try{ await saveFields(FIELDS_RESULTS); showToast('Αποθηκεύτηκε'); setTimeout(()=>location.reload(),800); }
-  catch(err){ showToast('Αποτυχία: '+err.message); }
-});
+tabBase.addEventListener('click', showBase);
+tabResults.addEventListener('click', showResults);
+saveBaseBtn.addEventListener('click', e=>{ e.preventDefault(); saveSection(formBase, FIELDS_BASE); });
+saveResultsBtn.addEventListener('click', e=>{ e.preventDefault(); saveSection(formResults, FIELDS_RESULTS); });
 resetBaseBtn.addEventListener('click', ()=> formBase.reset());
 resetResultsBtn.addEventListener('click', ()=> formResults.reset());
